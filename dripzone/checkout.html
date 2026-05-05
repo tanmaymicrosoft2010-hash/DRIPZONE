@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dripzone | Checkout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .checkout-container { max-width: 1200px; margin: 120px auto; padding: 0 2rem; display: flex; gap: 4rem; }
+        .checkout-form, .checkout-summary { flex: 1; }
+        
+        .checkout-summary { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); height: max-content; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid #eee; }
+        .summary-total { font-size: 1.5rem; font-weight: 700; display: flex; justify-content: space-between; margin-top: 2rem; }
+        
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; font-size: 0.9rem; }
+        .form-group input, .form-group textarea { width: 100%; padding: 1rem; border: 1px solid #ccc; border-radius: 10px; font-size: 1rem; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 100px; }
+        
+        .btn-primary { width: 100%; padding: 1rem; background: var(--accent); color: white; border: none; font-size: 1.1rem; font-weight: bold; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        .btn-primary:hover { background: #333; }
+        
+        /* UPI Section */
+        .upi-section { display: none; background: white; padding: 3rem 2rem; border-radius: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+        .upi-section.active { display: block; }
+        .qr-placeholder { width: 200px; height: 200px; background: #eee; border: 2px dashed #ccc; margin: 2rem auto; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: #888; }
+        
+        .success-section { display: none; text-align: center; margin-top: 100px; }
+        .success-section.active { display: block; }
+        .success-section i { font-size: 5rem; color: green; margin-bottom: 1rem; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">
+            <span>Dripzone</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="index.html#products">PRODUCTS</a></li>
+            <li id="adminNavBtn" style="display:none;"><a href="admin.html" style="color:red; font-weight:800; letter-spacing:1px;">ADMIN ORDERS</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="userBtn"><i class="ph ph-user"></i></button>
+            <button id="cartBtn" class="cart-btn"><i class="ph ph-shopping-bag"></i><span id="cartCount" class="cart-count">0</span></button>
+            <button id="hamburgerBtn" class="hamburger" style="display:none;"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <div class="checkout-container" id="mainCheckoutFlow" style="flex-direction: column; max-width: 800px;">
+        
+        <!-- Stepper UI -->
+        <div class="stepper" style="display: flex; justify-content: space-between; margin-bottom: 3rem; position: relative;">
+            <div style="position: absolute; top: 50%; left: 0; right: 0; height: 2px; background: #eee; z-index: 0; transform: translateY(-50%);"></div>
+            
+            <div class="step active" id="step1Indicator" style="background: var(--accent); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 1; border: 4px solid white;">1</div>
+            <div class="step" id="step2Indicator" style="background: #eee; color: #888; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 1; border: 4px solid white;">2</div>
+            <div class="step" id="step3Indicator" style="background: #eee; color: #888; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; z-index: 1; border: 4px solid white;">3</div>
+        </div>
+
+        <!-- Step 1: Order Summary -->
+        <div class="checkout-step active" id="step1Summary" style="background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <h2 style="font-size: 2rem; margin-bottom: 1.5rem;">Order Summary</h2>
+            <div id="checkoutItemsList"></div>
+            <div class="summary-total" style="font-size: 1.8rem; border-top: 2px solid #eee; padding-top: 1rem; margin-top: 1rem;">
+                <span>Total</span>
+                <span>₹<span id="checkoutTotalVal">0</span></span>
+            </div>
+            <button id="btnToStep2" class="btn-primary" style="margin-top: 2rem;">Proceed to Shipping</button>
+        </div>
+
+        <!-- Step 2: Form Section -->
+        <div class="checkout-step" id="step2Address" style="display: none; background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+                <h2 style="font-size: 2rem;">Shipping Details</h2>
+                <button id="btnBackToStep1" style="background:none; border:none; color:var(--secondary-text); cursor:pointer; font-size:1rem; font-weight:600;"><i class="ph ph-arrow-left"></i> Back</button>
+            </div>
+            <form id="checkoutForm">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="chkName" required>
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number *</label>
+                    <input type="tel" id="chkMobile" pattern="[0-9]{10,15}" required placeholder="e.g. 9876543210">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="chkEmail">
+                </div>
+                <div class="form-group">
+                    <label>Complete Address *</label>
+                    <textarea id="chkAddress" required placeholder="House No, Street, Landmark, City, Pincode"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Proceed to Payment</button>
+            </form>
+        </div>
+
+        <!-- Step 3: Razorpay Section -->
+        <div class="checkout-step" id="step3Payment" style="display: none; background: white; padding: 3rem 2rem; border-radius: 20px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem;">
+                <h2 style="font-size: 2rem; margin:auto;">Secure Payment</h2>
+            </div>
+            
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" alt="Razorpay" style="height: 40px; margin-bottom: 2rem;">
+            
+            <div style="background:#f9f9f9; padding: 2rem; border-radius: 10px; border: 1px solid #eee; margin-bottom: 2rem;">
+                <p style="font-size: 1.2rem; color: #555; margin-bottom: 1rem;">Total Amount Payable:</p>
+                <h3 style="font-size: 2.5rem;">₹<span id="finalDisplayTotal">0</span></h3>
+            </div>
+            
+            <button id="initRazorpayBtn" class="btn-primary" style="background: #3395ff; font-size: 1.2rem; padding: 1.2rem;">Pay Now with Razorpay</button>
+            <button id="btnBackToStep2" style="background:none; border:none; color:var(--secondary-text); cursor:pointer; font-size:1rem; font-weight:600; margin-top:2rem;">Cancel & Go Back</button>
+        </div>
+
+    </div>
+
+    <!-- Success Output -->
+    <div class="success-section" id="successSection">
+        <i class="ph-fill ph-check-circle" style="font-size: 6rem; color: #32CD32; animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);"></i>
+        <h1 style="font-size: 3rem; margin-top: 1rem;">Payment Successful!</h1>
+        <p style="color: #666; margin-top: 1rem; font-size: 1.2rem;">Order ID: <strong id="successOrderId"></strong></p>
+        <button onclick="window.location.href='index.html'" class="btn-primary" style="max-width: 250px; margin: 3rem auto; display: block;">Return Home</button>
+    </div>
+
+    <!-- Razorpay Mock Overlay (Architected accurately to resemble real Razorpay) -->
+    <div id="razorpayMockOverlay" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; width: 400px; max-width: 90%; border-radius:10px; overflow:hidden; box-shadow:0 10px 40px rgba(0,0,0,0.2);">
+            <div style="background:#3395ff; color:white; padding: 1.5rem; display:flex; justify-content:space-between; align-items:center;">
+                <div style="font-weight:bold; font-size:1.2rem;">Dripzone Checkout</div>
+                <button id="closeRazorpayMock" style="background:none; border:none; color:white; font-size:1.5rem; cursor:pointer;">&times;</button>
+            </div>
+            <div style="padding: 2rem; text-align:center;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/89/Razorpay_logo.svg" alt="Razorpay" style="height: 30px; margin-bottom: 2rem;">
+                <p>Test Payment Environment</p>
+                <div style="font-size: 2rem; font-weight:bold; margin: 1rem 0;">₹<span id="rzpMockTotal"></span></div>
+                <button id="rzpMockSuccessBtn" style="width:100%; padding:1rem; background:#28a745; color:white; border:none; border-radius:5px; font-weight:bold; font-size:1.1rem; cursor:pointer; margin-bottom:1rem;">Simulate Success</button>
+                <button id="rzpMockFailBtn" style="width:100%; padding:1rem; background:#dc3545; color:white; border:none; border-radius:5px; font-weight:bold; font-size:1.1rem; cursor:pointer;">Simulate Failure</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="app.js"></script>
+    <script src="checkout.js"></script>
+</body>
+</html>

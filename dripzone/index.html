@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dripzone | Thrifted Aesthetics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        html { scroll-behavior: smooth; }
+        .grid-container { display:flex; justify-content:center; gap:2rem; flex-wrap:wrap; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar fade-in-down">
+        <div class="logo">
+            <span>Dripzone</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html#home" class="active">HOME</a></li>
+            <li><a href="index.html#products">PRODUCTS</a></li>
+            <li><a href="index.html#accessories">ACCESSORIES</a></li>
+            <li><a href="index.html#collection">COLLECTION</a></li>
+            <li><a href="index.html#about">ABOUT</a></li>
+            <li id="adminNavBtn" style="display:none;"><a href="admin.html" style="color:red; font-weight:800; letter-spacing:1px;">ADMIN ORDERS</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="userBtn"><i class="ph ph-user"></i></button>
+            <button id="cartBtn" class="cart-btn">
+                <i class="ph ph-shopping-bag"></i>
+                <span id="cartCount" class="cart-count">0</span>
+            </button>
+            <button id="hamburgerBtn" class="hamburger" style="display:none;"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <main id="home" class="main-layout">
+        
+        <a href="product.html?id=1" class="hero-image-container fade-in" style="display:block; cursor:pointer;">
+            <img src="assets/images/arctic-monkeys.png" alt="Arctic Monkeys Graphic T-Shirt" loading="lazy" class="hero-image smooth-img" onload="this.classList.add('loaded')">
+        </a>
+
+        <div class="left-content fade-in-left">
+            <h1 class="product-title">Arctic Monkeys<br>Graphic T-Shirt</h1>
+            <p class="product-desc">Premium 100% cotton graphic t-shirt. Limited edition Arctic Monkeys print. Soft-touch fabric for maximum comfort.</p>
+            
+            <div class="product-price">
+                <span style="text-decoration:line-through; opacity:0.5; font-size:1.5rem; margin-right:10px;">₹999</span>₹599
+            </div>
+            
+            <div class="color-selection">
+                <span>Color</span>
+                <div class="colors">
+                    <div class="color-dot active" style="background: #222;"></div>
+                    <div class="color-dot" style="background: #5A6A80;"></div>
+                    <div class="color-dot" style="background: #E5E5E5;"></div>
+                </div>
+            </div>
+
+            <button class="add-to-cart-main" onclick="addToCart({id: 1, name: 'Arctic Monkeys Graphic T-Shirt', price: 599, img: 'assets/images/arctic-monkeys.png'})">Add to Cart</button>
+
+            <div class="social-links">
+                <i class="ph ph-share-network"></i>
+                <i class="ph ph-instagram-logo"></i>
+                <i class="ph ph-facebook-logo"></i>
+                <i class="ph ph-twitter-logo"></i>
+            </div>
+        </div>
+
+        <div class="right-content fade-in-right">
+            <div class="drop-capsule glass">
+                <div class="capsule-text">
+                    <h3>Latest Drops</h3>
+                    <p>Exclusive thrifted concept drop</p>
+                </div>
+                <div class="capsule-visual">
+                    <img src="assets/images/thumbnail.png" alt="Thumbnail">
+                    <i class="ph-fill ph-play-circle play-icon"></i>
+                </div>
+            </div>
+
+            <div class="secondary-product-card glass">
+                <div class="sec-text">
+                    <h3>Friday the 13th</h3>
+                    <p>Exclusive horror-themed acid-wash t-shirt. Featuring the iconic Jason mask.</p>
+                    <div class="sec-price">
+                        <span style="text-decoration:line-through; opacity:0.5; font-size:1rem; margin-right:8px;">₹999</span>₹599
+                    </div>
+                    <button class="sec-add" onclick="addToCart({id: 2, name: 'Friday the 13th Graphic T-Shirt', price: 599, img: 'assets/images/friday-13th.png'})">Add</button>
+                </div>
+                <a href="product.html?id=2" class="sec-image" style="cursor:pointer; display:block;">
+                    <img src="assets/images/friday-13th.png" alt="Friday the 13th T-Shirt" loading="lazy" class="smooth-img" onload="this.classList.add('loaded')">
+                </a>
+                <div class="sec-controls">
+                    <button><i class="ph ph-caret-up"></i></button>
+                    <button><i class="ph ph-caret-down"></i></button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Products Section -->
+    <section id="products" class="page-section text-center">
+        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem;">ALL THRIFT DROPS</h1>
+        <p style="color: var(--secondary-text); margin-bottom: 3rem;">View our entire catalog right here.</p>
+        <div id="dynamicProductsList" class="grid-container"></div>
+    </section>
+
+    <!-- Accessories Section -->
+    <section id="accessories" class="page-section text-center">
+        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 1rem;">ACCESSORIES</h1>
+        <p style="color: var(--secondary-text); margin-bottom: 3rem;">Complete the fit.</p>
+        <div id="dynamicAccessoriesList" class="grid-container"></div>
+    </section>
+
+    <!-- Collection Section -->
+    <section id="collection" class="page-section text-center">
+        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 2rem;">THE LATEST DROP</h1>
+        <div style="background: url('assets/images/hero.png') center/cover; height: 600px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);"></div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="page-section text-center" style="display: flex; flex-direction: column; justify-content: center; max-width: 800px; margin: 0 auto; min-height: 80vh;">
+        <h1 style="font-size: 3rem; font-weight: 800; margin-bottom: 2rem;">OUR STORY</h1>
+        <p style="font-size: 1.2rem; line-height: 1.8; color: var(--secondary-text); margin-bottom: 3rem;">Dripzone was founded to bring curated, high-quality thrifted streetwear to everyone. We believe in sustainable fashion, unique pieces, and a high-end experience.</p>
+        
+        <div style="margin-top: 4rem; display: flex; flex-direction: column; align-items: center; gap: 1rem;">
+            <p style="font-size: 0.9rem; color: var(--secondary-text); font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Designed & Developed by Tanmay Singh</p>
+            <a href="https://instagram.com/dripzoneofficial.in" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 0.5rem; text-decoration: none; background: #fff; border: 1px solid #eaeaea; color: var(--primary-text); padding: 0.8rem 1.5rem; border-radius: 50px; font-weight: 600; font-size: 0.9rem; transition: 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.05);" onmouseover="this.style.background='#fafafa'; this.style.transform='scale(1.05)'" onmouseout="this.style.background='#fff'; this.style.transform='scale(1)'">
+                <i class="ph-fill ph-instagram-logo" style="font-size: 1.2rem; color: #E1306C;"></i> @dripzoneofficial.in
+            </a>
+        </div>
+    </section>
+
+    <!-- Modals -->
+    <div id="cartModal" class="cart-modal">
+        <div class="cart-header">
+            <h2>Your Bag</h2>
+            <button id="closeCartBtn"><i class="ph ph-x"></i></button>
+        </div>
+        <div id="cartItems" class="cart-items">
+            <!-- Items will be injected here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">Total: ₹<span id="cartTotalPrice">0</span></div>
+            <button class="checkout-btn">Checkout</button>
+        </div>
+    </div>
+    <div id="cartOverlay" class="overlay"></div>
+
+    <div id="authModal" class="auth-modal">
+        <div class="auth-content glass">
+            <button id="closeAuthBtn" class="close-auth"><i class="ph ph-x"></i></button>
+            <div style="text-align:center; margin-bottom: 1.5rem;">
+                <h2 style="font-size: 1.5rem; font-weight:800; margin-bottom:0.5rem;">Welcome</h2>
+                <p style="font-size: 0.9rem; color: #666;">Sign in to unlock exclusive thrift drops.</p>
+            </div>
+            
+            <form id="loginForm" class="auth-form active">
+                <input type="email" id="loginEmail" placeholder="Enter your Email Address" required style="margin-bottom: 1rem;">
+                <button type="submit" id="magicLinkBtn">Send Magic Link <i class="ph ph-envelope-simple-open" style="margin-left: 5px;"></i></button>
+            </form>
+            
+            <div class="auth-divider" style="text-align:center; margin: 1.5rem 0; color:#888; font-size:0.9rem; position:relative;">
+                <span style="background:var(--card-bg, #fff); padding:0 10px; position:relative; z-index:1;">OR</span>
+                <div style="position:absolute; top:50%; left:0; right:0; height:1px; background:#e0e0e0; z-index:0;"></div>
+            </div>
+            
+            <button id="googleLoginBtn" style="width:100%; display:flex; align-items:center; justify-content:center; gap:10px; background:#fff; color:#333; border:1px solid #ccc; padding:12px; border-radius:10px; cursor:pointer; font-family:inherit; font-weight:600; font-size:1rem; transition:0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.05);" onmouseover="this.style.background='#f9f9f9'" onmouseout="this.style.background='#fff'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" style="width:20px; height:20px;">
+                Continue with Google
+            </button>
+            <div id="authMessage" class="auth-message"></div>
+        </div>
+    </div>
+    <div id="authOverlay" class="overlay"></div>
+
+    <script src="data/products.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"></script>
+    
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    
+    <script src="app.js"></script>
+    <script>
+        // Simple active state toggler for scrolling navbar
+        const sections = document.querySelectorAll('section, main');
+        const navLi = document.querySelectorAll('.nav-links a');
+
+        window.onscroll = () => {
+            var current = "";
+
+            sections.forEach((section) => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLi.forEach((a) => {
+                a.classList.remove('active');
+                if (a.getAttribute('href').includes(current)) {
+                    a.classList.add('active');
+                }
+            });
+        };
+    </script>
+</body>
+</html>

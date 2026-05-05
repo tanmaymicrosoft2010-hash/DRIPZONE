@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dripzone | Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .admin-layout { max-width: 1400px; margin: 100px auto; padding: 2rem; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        
+        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        th, td { padding: 1.2rem; text-align: left; border-bottom: 1px solid #eee; }
+        th { background: var(--accent); color: white; font-weight: 600; font-size: 0.9rem; }
+        tr:hover { background: #fcfcfc; }
+        
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.8rem; font-weight: bold; background: #ffeaa7; color: #d63031; }
+        .item-list { max-width: 250px; font-size: 0.85rem; color: #555; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar" style="border-bottom: 1px solid #ddd; background: white;">
+        <div class="logo">
+            <span>Dripzone Portal</span>
+        </div>
+        <div class="nav-actions">
+            <button id="adminLogoutBtn" class="add-to-cart-main" style="margin-bottom:0; padding: 0.5rem 1rem;">Logout Admin</button>
+            <button id="hamburgerBtn" class="hamburger" style="display:none;"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <div class="admin-layout">
+        <div class="admin-header">
+            <h2>Order Management</h2>
+            <div style="display:flex; gap: 2rem; align-items:center;">
+                <p style="background:var(--accent); color:white; padding:1rem; border-radius:10px; font-size:1.1rem; box-shadow:0 4px 10px rgba(0,0,0,0.1);">Total Revenue: <span id="totalRevenueCount" style="font-weight:bold; font-size:1.4rem;">₹0</span></p>
+                <p style="background:white; padding:1rem; border-radius:10px; border:1px solid #eee; font-size:1.1rem;">Total Orders: <span id="totalOrdersCount" style="font-weight:bold; font-size:1.4rem;">0</span></p>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer (Username)</th>
+                    <th>Contact Info</th>
+                    <th>Shipping Address</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+                <!-- Orders Injected Here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Firebase SDK Compat -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

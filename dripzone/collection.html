@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dripzone | Collection</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <style>
+        .page-content { max-width: 1200px; margin: 120px auto; padding: 0 2rem; text-align: center; }
+        .page-title { font-size: 3rem; font-weight: 800; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <i class="ph-bold ph-drop"></i> <span>Dripzone</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">HOME</a></li>
+            <li><a href="products.html">PRODUCTS</a></li>
+            <li><a href="accessories.html">ACCESSORIES</a></li>
+            <li><a href="collection.html" class="active">COLLECTION</a></li>
+            <li><a href="about.html">ABOUT</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="userBtn"><i class="ph ph-user"></i></button>
+            <button id="cartBtn" class="cart-btn"><i class="ph ph-shopping-bag"></i><span id="cartCount" class="cart-count">0</span></button>
+            <button id="hamburgerBtn" class="hamburger" style="display:none;"><i class="ph ph-list"></i></button>
+        </div>
+    </nav>
+
+    <div class="page-content fade-in-down">
+        <h1 class="page-title">THE LATEST DROP</h1>
+        <div style="background: url('assets/images/hero.png') center/cover; height: 500px; border-radius: 20px;"></div>
+    </div>
+
+    <!-- Modals skipped here for brevity of demo, normally they reside in a shared component... -->
+    
+    <script src="app.js"></script>
+</body>
+</html>
